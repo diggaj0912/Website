@@ -1,0 +1,139 @@
+# Cursor Rules
+
+## Instructions
+
+- Record fixes for mistakes or corrections to avoid repetition in the `Lessons` section.
+- Organize thoughts and plan steps before starting a task in the `Scratchpad` section.
+- Clear old tasks if necessary.
+- Use todo markers for progress tracking:
+  - `[X]` Completed tasks
+  - `[ ]` Pending tasks
+- Update Scratchpad after completing subtasks.
+- Reflect and plan after milestones for better task management.
+- Always refer to Scratchpad before planning the next step.
+
+## Lessons
+
+## Scratchpad
+
+# Ecommerce Website Development Steps (Amazon-like with Admin Dashboard)
+
+## Tech Stack
+- **Frontend**: Next.js 15, TypeScript, Shadcn/ui, Lucide Icons
+- **State Management**: Zustand
+- **Validation**: Zod
+- **Charts**: Recharts
+- **Email**: Resend
+- **File Upload**: Uploadthing
+- **Database**: Prisma + PostgreSQL
+- **Authentication**: next-auth@beta
+- **Payments**: Stripe
+
+## Phase 1: Project Setup & Foundation
+- [ ] Install and configure Shadcn/ui components
+- [ ] Set up Prisma with PostgreSQL database
+- [ ] Configure next-auth@beta for authentication
+- [ ] Set up Zustand for state management
+- [ ] Configure Zod for form validation
+- [ ] Set up Uploadthing for file uploads
+- [ ] Configure Resend for email services
+- [ ] Set up Stripe for payments
+- [ ] Create database schema with Prisma
+
+## Phase 2: Authentication & User Management
+- [ ] Create user registration/login pages
+- [ ] Implement role-based access (customer/admin)
+- [ ] Set up protected routes
+- [ ] Create user profile management
+- [ ] Implement password reset functionality
+- [ ] Add email verification
+
+## Phase 3: Core Ecommerce Features
+- [ ] Create product model and database schema
+- [ ] Build product listing page with filters/search
+- [ ] Implement product detail pages
+- [ ] Create shopping cart functionality
+- [ ] Build wishlist/favorites system
+- [ ] Implement product reviews and ratings
+- [ ] Add product categories and subcategories
+
+## Phase 4: Shopping Cart & Checkout
+- [ ] Create cart state management with Zustand
+- [ ] Build cart page with quantity updates
+- [ ] Implement shipping address management
+- [ ] Create checkout flow with Stripe integration
+- [ ] Add order confirmation and tracking
+- [ ] Implement order history for users
+
+## Phase 5: Admin Dashboard
+- [ ] Create admin authentication and authorization
+- [ ] Build admin dashboard layout with navigation
+- [ ] Create product management (CRUD operations)
+- [ ] Build order management system
+- [ ] Implement user management for admins
+- [ ] Create analytics dashboard with Recharts
+- [ ] Add inventory management
+- [ ] Build category management
+
+## Phase 6: Advanced Features
+- [ ] Implement product search with filters
+- [ ] Add product recommendations
+- [ ] Create promotional codes/discounts
+- [ ] Build notification system
+- [ ] Add product image gallery
+- [ ] Implement product variants (size, color, etc.)
+- [ ] Create bulk product import/export
+
+## Phase 7: UI/UX Enhancement
+- [ ] Design responsive layouts for all pages
+- [ ] Implement dark/light theme toggle
+- [ ] Add loading states and error handling
+- [ ] Create mobile-optimized interfaces
+- [ ] Add accessibility features
+- [ ] Implement smooth animations and transitions
+
+## Phase 8: Performance & Optimization
+- [ ] Implement image optimization
+- [ ] Add caching strategies
+- [ ] Optimize database queries
+- [ ] Implement lazy loading
+- [ ] Add SEO optimization
+- [ ] Set up monitoring and analytics
+
+## Phase 9: Testing & Deployment
+- [ ] Write unit tests for components
+- [ ] Add integration tests for API routes
+- [ ] Implement E2E testing
+- [ ] Set up CI/CD pipeline
+- [ ] Deploy to production
+- [ ] Configure monitoring and logging
+
+## Database Schema (Key Models)
+```prisma
+model User {
+  id, email, name, role, createdAt, updatedAt
+  orders, reviews, addresses, cartItems
+}
+
+model Product {
+  id, name, description, price, images, categoryId
+  variants, reviews, cartItems, orderItems
+}
+
+model Order {
+  id, userId, status, total, shippingAddress
+  items, payments, createdAt, updatedAt
+}
+
+model Category {
+  id, name, description, parentId
+  products, children
+}
+```
+
+## Key Components to Build
+- ProductCard, ProductGrid, ProductFilters
+- ShoppingCart, CartItem, CheckoutForm
+- AdminDashboard, ProductForm, OrderManagement
+- UserProfile, AddressForm, OrderHistory
+- SearchBar, CategoryNav, ReviewSection
