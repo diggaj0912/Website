@@ -1,6 +1,5 @@
 "use client"
 
-import { signIn, getSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -16,27 +15,17 @@ export default function SignInPage() {
     e.preventDefault()
     setIsLoading(true)
     
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      })
-      
-      if (result?.error) {
-        console.error("Sign in error:", result.error)
-      } else {
-        window.location.href = "/"
-      }
-    } catch (error) {
-      console.error("Sign in error:", error)
-    } finally {
+    // Temporary placeholder - authentication will be implemented later
+    console.log("Sign in attempt:", { email, password })
+    
+    setTimeout(() => {
       setIsLoading(false)
-    }
+      alert("Authentication temporarily disabled for deployment")
+    }, 1000)
   }
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" })
+    alert("Google authentication temporarily disabled for deployment")
   }
 
   return (
