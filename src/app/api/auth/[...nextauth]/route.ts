@@ -10,7 +10,7 @@ const loginSchema = z.object({
   password: z.string().min(6),
 })
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
@@ -27,13 +27,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             where: { email }
           })
 
-          if (!user) {
+          if (!user || !user.password) {
             return null
           }
 
-          // For now, we'll use a simple password check
-          // In production, you should hash passwords during registration
-          const isPasswordValid = await bcrypt.compare(password, user.password || "")
+          const isPasswordValid = await bcrypt.compare(password, user.password)
           
           if (!isPasswordValid) {
             return null
@@ -57,13 +55,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.id = user.id
         token.role = user.role
       }
       return token
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.sub!
+      if (session.user) {
+        session.user.id = token.id as string
         session.user.role = token.role as string
       }
       return session
@@ -71,6 +70,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   pages: {
     signIn: "/auth/signin",
-    signUp: "/auth/signup",
+    error: "/auth/signin",
   },
 })
+
+// Export the handlers for Next.js App Router
+export const GET = handlers.GET
+export const POST = handlers.POST
+
+// Export auth functions for use in other parts of the app
+export { auth, signIn, signOut }
