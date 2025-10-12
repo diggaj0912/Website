@@ -43,9 +43,9 @@ async function main() {
     data: {
       name: 'Admin User',
       email: 'admin@example.com',
-      
+      password: hashedPassword,
       role: 'ADMIN',
-      
+      emailVerified: new Date(),
     },
   })
 
@@ -53,9 +53,9 @@ async function main() {
     data: {
       name: 'John Doe',
       email: 'john@example.com',
-      
+      password: hashedPassword,
       role: 'CUSTOMER',
-      
+      emailVerified: new Date(),
     },
   })
 
@@ -63,9 +63,9 @@ async function main() {
     data: {
       name: 'Jane Smith',
       email: 'jane@example.com',
-      
+      password: hashedPassword,
       role: 'CUSTOMER',
-      
+      emailVerified: new Date(),
     },
   })
 
