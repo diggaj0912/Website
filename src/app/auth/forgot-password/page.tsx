@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -12,42 +10,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import Link from "next/link"
 
-const signInSchema = z.object({
+const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
 })
 
-type SignInForm = z.infer<typeof signInSchema>
+type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>
 
-export default function SignInPage() {
+export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const router = useRouter()
+  const [success, setSuccess] = useState(false)
 
-  const form = useForm<SignInForm>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<ForgotPasswordForm>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   })
 
-  const onSubmit = async (data: SignInForm) => {
+  const onSubmit = async (data: ForgotPasswordForm) => {
     setIsLoading(true)
     setError("")
 
     try {
-      const result = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: data.email }),
       })
 
-      if (result?.error) {
-        setError("Invalid email or password")
+      if (response.ok) {
+        setSuccess(true)
       } else {
-        router.push("/")
-        router.refresh()
+        const errorData = await response.json()
+        setError(errorData.message || "Something went wrong. Please try again.")
       }
     } catch (error) {
       setError("Something went wrong. Please try again.")
@@ -56,13 +54,43 @@ export default function SignInPage() {
     }
   }
 
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="mt-2 text-lg font-medium text-gray-900">Check your email</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                We've sent you a password reset link. Please check your email and follow the instructions.
+              </p>
+              <div className="mt-6">
+                <Link
+                  href="/auth/signin"
+                  className="text-sm text-blue-600 hover:text-blue-500"
+                >
+                  Back to sign in
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Forgot password</CardTitle>
           <CardDescription className="text-center">
-            Enter your email and password to sign in to your account
+            Enter your email address and we'll send you a link to reset your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -92,43 +120,15 @@ export default function SignInPage() {
                   </FormItem>
                 )}
               />
-              
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your password"
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex items-center justify-between">
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-sm text-blue-600 hover:text-blue-500"
-                >
-                  Forgot password?
-                </Link>
-              </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading ? "Sending..." : "Send reset link"}
               </Button>
 
               <div className="text-center text-sm">
-                Don't have an account?{" "}
-                <Link href="/auth/signup" className="text-blue-600 hover:text-blue-500">
-                  Sign up
+                Remember your password?{" "}
+                <Link href="/auth/signin" className="text-blue-600 hover:text-blue-500">
+                  Sign in
                 </Link>
               </div>
             </form>
