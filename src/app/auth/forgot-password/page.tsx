@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
         const errorData = await response.json()
         setError(errorData.message || "Something went wrong. Please try again.")
       }
-    } catch (error) {
+    } catch {
       setError("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
               </div>
               <h3 className="mt-2 text-lg font-medium text-gray-900">Check your email</h3>
               <p className="mt-1 text-sm text-gray-500">
-                We've sent you a password reset link. Please check your email and follow the instructions.
+                We&apos;ve sent you a password reset link. Please check your email and follow the instructions.
               </p>
               <div className="mt-6">
                 <Link
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Forgot password</CardTitle>
           <CardDescription className="text-center">
-            Enter your email address and we'll send you a link to reset your password
+            Enter your email address and we&apos;ll send you a link to reset your password
           </CardDescription>
         </CardHeader>
         <CardContent>

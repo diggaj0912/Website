@@ -43,7 +43,7 @@ async function main() {
     data: {
       name: 'Admin User',
       email: 'admin@example.com',
-     
+      
       role: 'ADMIN',
       
     },

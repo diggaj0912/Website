@@ -68,7 +68,7 @@ export default function SignUpPage() {
         const errorData = await response.json()
         setError(errorData.message || "Something went wrong. Please try again.")
       }
-    } catch (error) {
+    } catch {
       setError("Something went wrong. Please try again.")
     } finally {
       setIsLoading(false)
