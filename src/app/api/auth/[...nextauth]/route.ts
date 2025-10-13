@@ -11,6 +11,7 @@ const loginSchema = z.object({
 })
 
 const { handlers, auth, signIn, signOut } = NextAuth({
+  // @ts-expect-error - Type mismatch between next-auth and @auth/prisma-adapter
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
@@ -63,7 +64,7 @@ const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
-        session.user.role = token.role as string
+        session.user.role = token.role as "CUSTOMER" | "ADMIN"
       }
       return session
     },
