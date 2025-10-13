@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { auth } from "@/app/api/auth/[...nextauth]/route"
+import { getToken } from "next-auth/jwt"
 
 export async function middleware(request: NextRequest) {
-  const session = await auth()
+  const token = await getToken({ req: request })
   const { pathname } = request.nextUrl
 
   // Public routes that don't require authentication
@@ -25,13 +25,13 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if user is authenticated
-  if (!session) {
+  if (!token) {
     return NextResponse.redirect(new URL("/auth/signin", request.url))
   }
 
   // Check admin routes
   if (adminRoutes.some(route => pathname.startsWith(route))) {
-    if (session.user.role !== "ADMIN") {
+    if (token.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/", request.url))
     }
   }
@@ -42,12 +42,13 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
+     * Match all paths except:
      * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * - _next (Next.js internals)
+     * - static (static files)
+     * - public (public files)
+     * - favicon.ico, robots.txt, site.webmanifest
      */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+    "/((?!api|_next|static|public|favicon.ico|robots.txt|site.webmanifest).*)"
+  ]
 }
