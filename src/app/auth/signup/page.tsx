@@ -11,6 +11,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import Link from "next/link"
 import bcrypt from "bcryptjs"
+import { signIn } from "next-auth/react"
+import { Github, Mail } from "lucide-react"
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -75,6 +77,18 @@ export default function SignUpPage() {
     }
   }
 
+  const handleOAuthSignIn = async (provider: string) => {
+    setIsLoading(true)
+    setError("")
+    
+    try {
+      await signIn(provider, { callbackUrl: "/" })
+    } catch {
+      setError("Something went wrong. Please try again.")
+      setIsLoading(false)
+    }
+  }
+
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -110,6 +124,41 @@ export default function SignUpPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* OAuth Provider Buttons */}
+          <div className="space-y-3 mb-6">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => handleOAuthSignIn("google")}
+              disabled={isLoading}
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              Continue with Google
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => handleOAuthSignIn("github")}
+              disabled={isLoading}
+            >
+              <Github className="mr-2 h-4 w-4" />
+              Continue with GitHub
+            </Button>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {error && (
