@@ -1,54 +1,27 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { auth } from "@/auth"
+﻿import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
-export default auth((req) => {
-  const { nextUrl } = req
-  const isLoggedIn = !!req.auth
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname
 
-  // Public routes that don't require authentication
-  const publicRoutes = [
-    "/",
-    "/auth/signin",
-    "/auth/signup", 
-    "/auth/forgot-password",
-    "/auth/reset-password",
-    "/api/auth",
-  ]
-
-  // Admin routes
-  const adminRoutes = ["/admin"]
-
-  // Check if route is public
-  if (publicRoutes.some(route => nextUrl.pathname.startsWith(route))) {
+  // Public paths
+  if (path === '/' || path.startsWith('/auth/') || path.startsWith('/_next/') || path.startsWith('/api/')) {
     return NextResponse.next()
   }
 
-  // Check if user is authenticated
-  if (!isLoggedIn) {
-    return NextResponse.redirect(new URL("/auth/signin", nextUrl))
+  const token = await getToken({ req: request })
+  if (!token) {
+    return NextResponse.redirect(new URL('/auth/signin', request.url))
   }
 
-  // Check admin routes
-  if (adminRoutes.some(route => nextUrl.pathname.startsWith(route))) {
-    if (req.auth?.user?.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", nextUrl))
-    }
+  if (path.startsWith('/admin') && token.role !== 'ADMIN') {
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
-  matcher: [
-    /*
-     * Match all paths except:
-     * - api (API routes)
-     * - _next (Next.js internals)
-     * - static (static files)
-     * - public (public files)
-     * - favicon.ico, robots.txt, site.webmanifest
-     */
-    "/((?!api|_next|static|public|favicon.ico|robots.txt|site.webmanifest).*)"
-  ]
+  matcher: "/((?!api|_next|static|.*\\.\\w+$).*)"
 }
