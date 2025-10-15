@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from './button'
@@ -14,25 +16,25 @@ interface Banner {
 const BANNERS: Banner[] = [
   {
     id: 1,
-    title: "Summer Collection 2025",
-    description: "Discover the latest trends in summer fashion",
-    imageUrl: "/images/banners/summer-collection.jpg",
+    title: "New Arrivals",
+    description: "Discover our latest collection",
+    imageUrl: "/images/banner1.jpg",
     buttonText: "Shop Now",
     buttonLink: "/category/summer-collection"
   },
   {
     id: 2,
-    title: "New Arrivals",
-    description: "Be the first to get our newest items",
-    imageUrl: "/images/banners/new-arrivals.jpg",
+    title: "Featured Collection",
+    description: "Explore our handpicked selection",
+    imageUrl: "/images/banner2.jpg",
     buttonText: "Explore",
-    buttonLink: "/new-arrivals"
+    buttonLink: "/category/featured"
   },
   {
     id: 3,
     title: "Special Offers",
     description: "Up to 50% off on selected items",
-    imageUrl: "/images/banners/special-offers.jpg",
+    imageUrl: "/images/banner3.jpg",
     buttonText: "View Deals",
     buttonLink: "/deals"
   }
