@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, Menu } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
 import { CartPreview } from '@/components/cart-preview'
 import { AnimatedContent } from '@/components/ui/animated-content'
+import { SearchBar } from '@/components/ui/search-bar'
+import { ProfileMenu } from '@/components/ui/profile-menu'
 import { auth } from '@/auth'
 
 const categories = [
@@ -59,16 +60,7 @@ export async function Header() {
           </NavigationMenu>
 
           {/* Search Bar */}
-          <div className="w-full max-w-md">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search products..."
-                className="pl-9 w-full"
-              />
-            </div>
-          </div>
+          <SearchBar />
         </div>
 
         {/* Desktop Actions */}
@@ -76,16 +68,7 @@ export async function Header() {
           <CartPreview />
 
           {session ? (
-            <>
-              <Link href="/profile">
-                <Button variant="ghost">Profile</Button>
-              </Link>
-              {session.user.role === 'ADMIN' && (
-                <Link href="/admin">
-                  <Button variant="ghost">Admin</Button>
-                </Link>
-              )}
-            </>
+            <ProfileMenu user={session.user} />
           ) : (
             <>
               <Link href="/auth/signin">
@@ -111,18 +94,9 @@ export async function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="flex flex-col h-full">
                 <AnimatedContent isVisible={true}>
-                  <div className="px-4 py-6 border-b">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        type="search"
-                        placeholder="Search products..."
-                        className="pl-9 w-full"
-                      />
-                    </div>
-                  </div>
-
-                  <nav className="flex-1 px-4 py-6 space-y-6">
+                <div className="px-4 py-6 border-b">
+                  <SearchBar />
+                </div>                  <nav className="flex-1 px-4 py-6 space-y-6">
                     <div className="space-y-3">
                       <h4 className="font-medium">Categories</h4>
                       {categories.map((category, index) => (
@@ -154,16 +128,9 @@ export async function Header() {
                     <AnimatedContent isVisible={true}>
                       <div className="space-y-3">
                         {session ? (
-                          <>
-                            <Link href="/profile" className="block text-muted-foreground hover:text-foreground transition-colors">
-                              Profile
-                            </Link>
-                            {session.user.role === 'ADMIN' && (
-                              <Link href="/admin" className="block text-muted-foreground hover:text-foreground transition-colors">
-                                Admin
-                              </Link>
-                            )}
-                          </>
+                          <div className="relative w-fit">
+                            <ProfileMenu user={session.user} />
+                          </div>
                         ) : (
                           <>
                             <Link href="/auth/signin" className="block text-muted-foreground hover:text-foreground transition-colors">

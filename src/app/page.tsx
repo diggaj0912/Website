@@ -1,25 +1,146 @@
-import { Navigation } from "@/components/navigation";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+export default function Home() {import { BannerCarousel } from '@/components/ui/banner-carousel'import { BannerCarousel } from "@/components/ui/banner-carousel";import { BannerCarousel } from "@/components/ui/banner-carousel";
 
-export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navigation />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
-            Welcome to Our Store
-          </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Discover amazing products and shop with confidence. Your one-stop destination for quality goods.
-          </p>
-          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-            <div className="rounded-md shadow">
-              <Link href="/products">
-                <Button size="lg" className="w-full">
-                  Shop Now
-                </Button>
+
+    <main className="min-h-screen">import { LatestProducts } from '@/components/ui/latest-products'
+
+      <h1>Home</h1>
+
+    </main>import { prisma } from '@/lib/prisma'import { LatestProducts } from "@/components/ui/latest-products";import { LatestProducts } from "@/components/ui/latest-products";
+
+  )
+
+}
+
+async function getLatestProducts() {import { prisma } from "@/lib/prisma";import { prisma } from "@/lib/prisma";
+
+  const products = await prisma.product.findMany({
+
+    take: 8,
+
+    orderBy: {
+
+      createdAt: 'desc'async function getLatestProducts() {async function getLatestProducts() {
+
+    },
+
+    select: {  const products = await prisma.product.findMany({  const products = await prisma.product.findMany({
+
+      id: true,
+
+      name: true,    take: 8,    take: 8,
+
+      price: true,
+
+      images: true,    orderBy: {    orderBy: {
+
+      category: {
+
+        select: {      createdAt: 'desc'      createdAt: 'desc'
+
+          name: true,
+
+          slug: true    },    },
+
+        }
+
+      },    select: {    select: {
+
+      slug: true
+
+    }      id: true,      id: true,
+
+  })
+
+      name: true,      name: true,
+
+  return products.map(product => ({
+
+    id: product.id,      price: true,      price: true,
+
+    name: product.name,
+
+    price: product.price,      images: true,      images: true,
+
+    image: product.images[0],
+
+    category: product.category.name,      category: {      category: {
+
+    slug: product.slug
+
+  }))        select: {        select: {
+
+}
+
+          name: true,          name: true,
+
+export default async function Home() {
+
+  const latestProducts = await getLatestProducts()          slug: true          slug: true
+
+
+
+  return (        }        }
+
+    <main className="min-h-screen">
+
+      <BannerCarousel />      },      },
+
+      <LatestProducts products={latestProducts} />
+
+    </main>      slug: true      slug: true
+
+  )
+
+}    }    }
+
+  });  });
+
+
+
+  return products.map(product => ({  return products.map(product => ({
+
+    id: product.id,    id: product.id,
+
+    name: product.name,    name: product.name,
+
+    price: product.price,    price: product.price,
+
+    image: product.images[0],    image: product.images[0],
+
+    category: product.category.name,    category: product.category.name,
+
+    slug: product.slug    slug: product.slug
+
+  }));  }));
+
+}}
+
+
+
+export default async function Home() {export default async function Home() {
+
+  const latestProducts = await getLatestProducts();  const latestProducts = await getLatestProducts();
+
+
+
+  return (  return (
+
+    <main className="min-h-screen">    <main className="min-h-screen">
+
+      <BannerCarousel />      <BannerCarousel />
+
+      <LatestProducts       <LatestProducts 
+
+        products={latestProducts}         products={latestProducts} 
+
+      />      />
+
+    </main>    </main>
+
+  );  );
+
+}                </Button>
               </Link>
             </div>
             <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
