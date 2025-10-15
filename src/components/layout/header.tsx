@@ -21,12 +21,12 @@ export async function Header() {
   const session = await auth()
 
   return (
-    <div className="container py-4">
-      <div className="flex items-center justify-between">
+    <header className="border-b bg-white">
+      <div className="container mx-auto py-4 px-4">
+        <div className="flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <img src="/logo.svg" alt="Store Logo" className="h-8 w-8" />
-          <span className="font-semibold text-xl hidden sm:inline-block">Your Store</span>
+          <span className="font-bold text-2xl tracking-tight">DriftsMan</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -149,7 +149,8 @@ export async function Header() {
             </SheetContent>
           </Sheet>
         </div>
+        </div>
       </div>
-    </div>
+    </header>
   )
 }
