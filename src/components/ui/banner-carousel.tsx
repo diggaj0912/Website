@@ -20,7 +20,7 @@ const BANNERS: Banner[] = [
     id: 1,
     title: "New Arrivals",
     description: "Check out our latest collection of amazing products",
-    imageUrl: "/images/banner-1.jpg",
+    imageUrl: "/images/banner1.jpg",
     buttonText: "Shop Now",
     buttonLink: "/new-arrivals"
   },
@@ -28,7 +28,7 @@ const BANNERS: Banner[] = [
     id: 2,
     title: "Featured Collection",
     description: "Explore our handpicked selection of premium products",
-    imageUrl: "/images/banner-2.jpg",
+    imageUrl: "/images/banner2.jpg",
     buttonText: "Explore",
     buttonLink: "/featured"
   },
@@ -36,7 +36,7 @@ const BANNERS: Banner[] = [
     id: 3,
     title: "Special Offers",
     description: "Up to 50% off on selected items",
-    imageUrl: "/images/banner-3.jpg",
+    imageUrl: "/images/banner3.jpg",
     buttonText: "View Deals",
     buttonLink: "/deals"
   }
