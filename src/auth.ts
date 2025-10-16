@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from "next-auth/providers/github"
+import { Role } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
@@ -15,6 +16,14 @@ const loginSchema = z.object({
 export const { handlers, signIn, signOut, auth } = NextAuth({
   // @ts-expect-error - Type mismatch between next-auth and @auth/prisma-adapter
   adapter: PrismaAdapter(prisma),
+  debug: process.env.NODE_ENV === 'development',
+  session: {
+    strategy: "jwt"
+  },
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/error'
+  },
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -60,12 +69,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     })
   ],
-  session: {
-    strategy: "jwt",
-  },
   callbacks: {
     async jwt({ token, user, account }) {
-      // Persist the OAuth access_token and or the user id to the token right after signin
       if (account) {
         token.accessToken = account.access_token
         token.provider = account.provider
@@ -76,7 +81,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = user.role
       }
       
-      // For OAuth users, fetch role from database
       if (token.email && !token.role) {
         const dbUser = await prisma.user.findUnique({
           where: { email: token.email as string }
@@ -84,7 +88,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (dbUser) {
           token.role = dbUser.role
         } else {
-          // Default role for new OAuth users
           token.role = "CUSTOMER"
         }
       }
@@ -94,23 +97,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
-        session.user.role = token.role as "CUSTOMER" | "ADMIN"
-        session.accessToken = token.accessToken as string
+        session.user.role = token.role as Role
+        session.user.email = token.email as string
       }
       return session
     },
-    async signIn({ account }) {
-      // Allow OAuth sign-ins
-      if (account?.provider === "google" || account?.provider === "github") {
-        return true
-      }
-      
-      // For credentials provider, the authorize function handles validation
-      return true
-    },
-  },
-  pages: {
-    signIn: "/auth/signin",
-    error: "/auth/signin",
-  },
+  }
 })

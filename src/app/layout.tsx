@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="min-h-screen bg-background font-sans antialiased">
         <AuthSessionProvider>
-          <div className="relative flex min-h-screen flex-col">
+          <div suppressHydrationWarning className="relative flex min-h-screen flex-col">
             {children}
           </div>
         </AuthSessionProvider>
