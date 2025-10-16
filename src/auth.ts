@@ -99,7 +99,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
-    async signIn({ user, account, profile }) {
+    async signIn({ account }) {
       // Allow OAuth sign-ins
       if (account?.provider === "google" || account?.provider === "github") {
         return true

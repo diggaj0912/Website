@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Link from 'next/link'
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -99,7 +98,7 @@ export async function Header() {
                 </div>                  <nav className="flex-1 px-4 py-6 space-y-6">
                     <div className="space-y-3">
                       <h4 className="font-medium">Categories</h4>
-                      {categories.map((category, index) => (
+                      {categories.map((category) => (
                         <AnimatedContent 
                           key={category.href} 
                           isVisible={true}

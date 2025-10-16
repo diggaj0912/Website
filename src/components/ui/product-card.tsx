@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { Heart, ShoppingCart } from 'lucide-react'
 import { Button } from './button'
 import { Badge } from './badge'
+import { SafeImage } from './safe-image'
 
 interface Product {
   id: string
@@ -24,7 +24,7 @@ export function ProductCard({ product, onAddToCart, onAddToWishlist }: ProductCa
     <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
       <div className="relative aspect-square overflow-hidden rounded-t-lg">
         <Link href={`/products/${product.slug}`}>
-          <Image
+          <SafeImage
             src={product.image}
             alt={product.name}
             fill

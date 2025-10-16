@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from './button'
-import Image from 'next/image'
 import Link from 'next/link'
+import { SafeImage } from './safe-image'
 
 interface Banner {
   id: number
@@ -77,7 +77,7 @@ export function BannerCarousel() {
           >
             {/* Image */}
             <div className="absolute inset-0">
-              <Image
+              <SafeImage
                 src={banner.imageUrl}
                 alt={banner.title}
                 fill
