@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Heart } from 'lucide-react'
+import { Heart, ShoppingCart } from 'lucide-react'
 import { Button } from './button'
-import { Card, CardContent, CardFooter } from './card'
+import { Badge } from './badge'
 
 interface Product {
   id: string
@@ -21,48 +21,69 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onAddToCart, onAddToWishlist }: ProductCardProps) {
   return (
-    <Card className="overflow-hidden group">
-      <CardContent className="p-0">
+    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+      <div className="relative aspect-square overflow-hidden rounded-t-lg">
         <Link href={`/products/${product.slug}`}>
-          <div className="relative aspect-square">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover transition-transform group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </div>
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover transition-transform group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </Link>
-        {onAddToWishlist && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-2 right-2 bg-white/80 hover:bg-white"
-            onClick={() => onAddToWishlist(product.id)}
-          >
-            <Heart className="h-5 w-5" />
-          </Button>
-        )}
-      </CardContent>
-      <CardFooter className="flex flex-col items-start gap-2 p-4">
-        <Link href={`/category/${product.category}`} className="text-sm text-muted-foreground hover:underline">
+        
+        {/* Quick Action Buttons */}
+        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          {onAddToWishlist && (
+            <Button
+              variant="secondary"
+              size="icon"
+              className="bg-white shadow-lg hover:bg-gray-100"
+              onClick={() => onAddToWishlist(product.id)}
+            >
+              <Heart className="h-4 w-4" />
+            </Button>
+          )}
+          {onAddToCart && (
+            <Button
+              variant="secondary"
+              size="icon"
+              className="bg-white shadow-lg hover:bg-gray-100"
+              onClick={() => onAddToCart(product.id)}
+            >
+              <ShoppingCart className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+
+        {/* Sale Badge */}
+        <Badge variant="destructive" className="absolute top-4 left-4">Sale</Badge>
+      </div>
+
+      <div className="p-4">
+        <Link href={`/category/${product.category}`} className="text-sm text-blue-600 hover:underline">
           {product.category}
         </Link>
-        <Link href={`/products/${product.slug}`} className="font-semibold hover:underline">
-          {product.name}
+        <Link href={`/products/${product.slug}`} className="block">
+          <h3 className="text-lg font-semibold mt-2 line-clamp-2 hover:text-blue-600">{product.name}</h3>
         </Link>
-        <div className="flex items-center justify-between w-full">
-          <span className="text-lg font-bold">
+        <div className="mt-2 flex items-center justify-between">
+          <div className="text-lg font-bold">
             ${product.price.toFixed(2)}
-          </span>
+          </div>
           {onAddToCart && (
-            <Button variant="secondary" onClick={() => onAddToCart(product.id)}>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="md:hidden"
+              onClick={() => onAddToCart(product.id)}
+            >
               Add to Cart
             </Button>
           )}
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }
