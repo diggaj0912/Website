@@ -2,9 +2,12 @@ import { Server as SocketServer } from 'socket.io'
 import { Server as NetServer } from 'http'
 import { prisma } from '@/lib/prisma'
 
-export type NotificationType = 'ORDER' | 'SHIPPING' | 'SYSTEM'
+import { Notification as PrismaNotification, NotificationType } from '@prisma/client'
 
-export interface Notification {
+export type { NotificationType }
+export type Notification = PrismaNotification
+
+export interface NotificationInput {
   id: string
   type: NotificationType
   message: string
@@ -32,22 +35,8 @@ export class NotificationService {
     })
   }
 
-  async sendNotification(notification: Omit<Notification, 'id' | 'createdAt' | 'read'>) {
-    const newNotification: Notification = {
-      id: Math.random().toString(36).substring(7),
-      createdAt: new Date(),
-      read: false,
-      ...notification,
-    }
-
-    if (notification.userId) {
-      this.io.to(`user-${notification.userId}`).emit('notification', newNotification)
-    } else {
-      this.io.emit('notification', newNotification)
-    }
-
-    // Store notification in database
-    await prisma.notification.create({
+  async sendNotification(notification: Omit<NotificationInput, 'id' | 'createdAt' | 'read'>) {
+    const dbNotification = await prisma.notification.create({
       data: {
         type: notification.type,
         message: notification.message,
@@ -55,6 +44,12 @@ export class NotificationService {
       }
     })
 
-    return newNotification
+    if (notification.userId) {
+      this.io.to(`user-${notification.userId}`).emit('notification', dbNotification)
+    } else {
+      this.io.emit('notification', dbNotification)
+    }
+    
+    return dbNotification
   }
 }
