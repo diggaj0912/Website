@@ -1,8 +1,6 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
-import GoogleProvider from "next-auth/providers/google"
-import GitHubProvider from "next-auth/providers/github"
 import { Role } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
@@ -13,16 +11,22 @@ const loginSchema = z.object({
   password: z.string().min(6),
 })
 
+if (!process.env.AUTH_SECRET) {
+  throw new Error('AUTH_SECRET environment variable is not set')
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   // @ts-expect-error - Type mismatch between next-auth and @auth/prisma-adapter
   adapter: PrismaAdapter(prisma),
+  secret: process.env.AUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
     signIn: '/auth/signin',
-    error: '/auth/error'
+    error: '/auth/error',
   },
   providers: [
     CredentialsProvider({
@@ -59,14 +63,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null
         }
       }
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     })
   ],
   callbacks: {

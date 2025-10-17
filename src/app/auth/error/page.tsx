@@ -1,12 +1,14 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const errorMessages: Record<string, string> = {
-  'Configuration': 'There is a problem with the server configuration.',
+  'Configuration': 'There is a problem with the server configuration. Please check your environment variables.',
   'AccessDenied': 'You do not have permission to sign in.',
   'Verification': 'The verification link was invalid or has expired.',
+  'CredentialsSignin': 'Invalid email or password.',
   'Default': 'An error occurred while trying to authenticate.'
 }
 
@@ -14,6 +16,12 @@ export default function AuthErrorPage() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   const errorMessage = error ? errorMessages[error] || errorMessages.Default : errorMessages.Default
+  
+  useEffect(() => {
+    if (error) {
+      console.error('Auth error:', error)
+    }
+  }, [error])
 
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
