@@ -25,9 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body suppressHydrationWarning className="min-h-screen bg-background font-sans antialiased">
         <AuthSessionProvider>
-          <div className="relative flex min-h-screen flex-col">
+          <div suppressHydrationWarning className="relative flex min-h-screen flex-col">
             {children}
           </div>
         </AuthSessionProvider>

@@ -1,8 +1,10 @@
 export default function Loading() {
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      <p className="mt-4 text-sm text-gray-600">Loading...</p>
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        <p className="text-sm text-gray-500">Loading...</p>
+      </div>
     </div>
   )
 }

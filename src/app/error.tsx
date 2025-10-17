@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 export default function Error({
   error,
   reset,
@@ -7,11 +9,20 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  useEffect(() => {
+    // Log the error to an error reporting service
+    console.error('Error:', error)
+  }, [error])
+
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col items-center justify-center space-y-4">
       <div className="text-center">
         <h2 className="text-2xl font-bold">Something went wrong!</h2>
-        <p className="text-gray-600 mt-2">We apologize for the inconvenience</p>
+        <p className="text-gray-600 mt-2">
+          {process.env.NODE_ENV === 'development' 
+            ? error.message 
+            : 'We apologize for the inconvenience'}
+        </p>
       </div>
       <button
         className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
