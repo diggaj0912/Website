@@ -22,13 +22,34 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // Relations
-  orders     Order[]
-  reviews    Review[]
-  addresses  Address[]
-  cartItems  CartItem[]
-  wishlist   WishlistItem[]
+  orders        Order[]
+  reviews       Review[]
+  addresses     Address[]
+  cartItems     CartItem[]
+  wishlist      WishlistItem[]
+  notifications Notification[]
 
   @@map("users")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  message   String
+  read      Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  userId    String?
+
+  // Relations
+  user      User?           @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  ORDER
+  SHIPPING
+  SYSTEM
 }
 
 model Category {

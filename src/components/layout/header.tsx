@@ -7,6 +7,7 @@ import { CartPreview } from '@/components/cart-preview'
 import { AnimatedContent } from '@/components/ui/animated-content'
 import { SearchBar } from '@/components/ui/search-bar'
 import { ProfileMenu } from '@/components/ui/profile-menu'
+import { NotificationsMenu } from '@/components/notifications-menu'
 import { auth } from '@/auth'
 
 const categories = [
@@ -27,6 +28,9 @@ export async function Header() {
         <Link href="/" className="flex items-center space-x-2">
           <span className="font-bold text-2xl tracking-tight">DriftsMan</span>
         </Link>
+
+        {/* Notifications */}
+        {session?.user && <NotificationsMenu />}
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-8">
